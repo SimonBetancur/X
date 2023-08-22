@@ -28,24 +28,34 @@ class Sistema:
       self.__lista_pacientes = []
     #   self.__lista_pacientes = {}
       self.__numero_pacientes = len(self.__lista_pacientes)
-      
+    
     def ingresarPaciente(self):
         # 1- solicito los datos por teclado
         nombre = input("Ingrese el nombre: ")
         cedula = int(input("Ingrese la cedula: "))    
         genero = input("Ingrese el genero: ")
         servicio = input("Ingrese el servicio: ")
+        
+        # Verificar si la cédula ya existe en la lista de pacientes
+        cedula_existente = any(p.verCedula() == cedula for p in self.__lista_pacientes)
+        
+        if cedula_existente:
+            print("El paciente ya había sido ingresado previamente.")
+            return False
+        else:
         # 2- creo el objeto Paciente y le asigno los datos
-        p = Paciente()
-        p.asignarNombre(nombre)
-        p.asignarCedula(cedula)
-        p.asignarGenero(genero)
-        p.asignarServicio(servicio)        
-        # 3- guardo el Paciente en  la lista        
-        self.__lista_pacientes.append(p)
-        # self.__lista_pacientes[p.verCedula()] = p
-        # 4- actualizo la cantidad de pacientes en el sistema
-        self.__numero_pacientes = len(self.__lista_pacientes)
+            p = Paciente()
+            p.asignarNombre(nombre)
+            p.asignarCedula(cedula)
+            p.asignarGenero(genero)
+            p.asignarServicio(servicio)
+            # 3- guardo el Paciente en  la lista                
+            self.__lista_pacientes.append(p)
+            # self.__lista_pacientes[p.verCedula()] = p
+            # 4- actualizo la cantidad de pacientes en el sistema
+            self.__numero_pacientes = len(self.__lista_pacientes)
+            print("Paciente ingresado exitosamente.")
+            return True
 
     def verNumeroPacientes(self):
         return self.__numero_pacientes
@@ -65,8 +75,11 @@ mi_sistema = Sistema()
 while True:
     opcion = int(input("1. Nuevo paciente\n - 2. Numero de paciente\n - 3. Datos paciente\n - 4. Salir:  \n"))
     if opcion == 1:
-        mi_sistema.ingresarPaciente()
-        
+        ingresado = mi_sistema.ingresarPaciente()
+        if ingresado:
+            print("Paciente ingresado exitosamente.")
+        else:
+            print("El paciente no fue ingresado.")        
     elif opcion == 2:
         print("Ahora hay: " + str(mi_sistema.verNumeroPacientes()))
     elif opcion == 3:
